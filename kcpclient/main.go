@@ -20,7 +20,7 @@ func main() {
 	myApp.Name = "kcptun"
 	myApp.Usage = "client(with SMUX)"
 	myApp.Version = src.VERSION
-	myApp.Flags = src.BuildServerFlags()
+	myApp.Flags = src.BuildClientFlags()
 	myApp.Action = func(c *cli.Context) {
 		config := src.ClientConfig{}
 
