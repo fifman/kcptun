@@ -31,7 +31,7 @@ func main() {
 		config.ScavengeTTL = c.Int("scavengettl")
 
 		src.ParseConfigFile(&config, c)
-		src.PostLoadConfig(&config.Config, c)
+		src.PostLoadConfig(&config.Config)
 
 		src.RunClient(config)
 	}

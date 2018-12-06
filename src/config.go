@@ -12,7 +12,7 @@ var (
 		cli.StringFlag{
 			Name:  "listen,l",
 			Value: ":29900",
-			Usage: "kcp server listen address",
+			Usage: "kcptun listen address",
 		},
 		cli.StringFlag{
 			Name:  "target, t",
@@ -39,16 +39,6 @@ var (
 			Name:  "mtu",
 			Value: 1350,
 			Usage: "set maximum transmission unit for UDP packets",
-		},
-		cli.IntFlag{
-			Name:  "sndwnd",
-			Value: 1024,
-			Usage: "set send window size(num of packets)",
-		},
-		cli.IntFlag{
-			Name:  "rcvwnd",
-			Value: 1024,
-			Usage: "set receive window size(num of packets)",
 		},
 		cli.IntFlag{
 			Name:  "datashard,ds",
@@ -134,6 +124,16 @@ var (
 func BuildClientFlags() []cli.Flag {
 	return append(flags,
 		cli.IntFlag{
+			Name:  "sndwnd",
+			Value: 128,
+			Usage: "set send window size(num of packets)",
+		},
+		cli.IntFlag{
+			Name:  "rcvwnd",
+			Value: 512,
+			Usage: "set receive window size(num of packets)",
+		},
+		cli.IntFlag{
 			Name:  "conn",
 			Value: 1,
 			Usage: "set num of UDP connections to server",
@@ -152,10 +152,22 @@ func BuildClientFlags() []cli.Flag {
 }
 
 func BuildServerFlags() []cli.Flag {
-	return append(flags, cli.BoolFlag{
-		Name:  "pprof",
-		Usage: "start profiling server on :6060",
-	})
+	return append(flags,
+		cli.BoolFlag{
+			Name:  "pprof",
+			Usage: "start profiling server on :6060",
+		},
+		cli.IntFlag{
+			Name:  "sndwnd",
+			Value: 1024,
+			Usage: "set send window size(num of packets)",
+		},
+		cli.IntFlag{
+			Name:  "rcvwnd",
+			Value: 1024,
+			Usage: "set receive window size(num of packets)",
+		},
+	)
 }
 
 type Config struct {
@@ -207,7 +219,7 @@ func setLogFile(config Config) {
 	}
 }
 
-func PostLoadConfig(config *Config, c *cli.Context) {
+func PostLoadConfig(config *Config) {
 	switch config.Mode {
 	case "normal":
 		config.NoDelay, config.Interval, config.Resend, config.NoCongestion = 0, 40, 2, 1

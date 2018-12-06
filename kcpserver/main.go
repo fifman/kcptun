@@ -27,7 +27,7 @@ func main() {
 		config.Pprof = c.Bool("pprof")
 
 		src.ParseConfigFile(&config, c)
-		src.PostLoadConfig(&config.Config, c)
+		src.PostLoadConfig(&config.Config)
 
 		src.RunServer(config)
 	}
